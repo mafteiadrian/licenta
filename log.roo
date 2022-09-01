@@ -1,0 +1,99 @@
+project --topLevelPackage com.compass.aspp
+jpa setup --provider HIBERNATE --database HYPERSONIC_IN_MEMORY
+entity jpa --class ~.domain.Client --testAutomatically --activeRecord false
+field string --fieldName nume --notNull --sizeMin 2 --class ~.domain.Client
+field string --fieldName telefon --notNull --sizeMin 2 --class ~.domain.Client
+field string --fieldName adresa --notNull --sizeMin 2 --class ~.domain.Client
+field string --fieldName email --notNull --sizeMin 2 --class ~.domain.Client
+entity jpa --class ~.domain.Rol --testAutomatically --activeRecord false
+field string --fieldName numeRol --sizeMin 2 --notNull --class ~.domain.Rol
+entity jpa --class ~.domain.Angajat --testAutomatically --activeRecord false
+field string --fieldName nume --sizeMin 2 --notNull --class ~.domain.Angajat
+field string --fieldName prenume --sizeMin 2 --notNull --class ~.domain.Angajat
+field string --fieldName adresa --sizeMin 2 --notNull --class ~.domain.Angajat
+field string --fieldName telefon --sizeMin 2 --notNull --class ~.domain.Angajat
+entity jpa --class ~.domain.Constatare --testAutomatically --activeRecord false
+field string --fieldName descriere --notNull --sizeMax 4000 --class ~.domain.Constatare
+entity jpa --class ~.domain.Utilizator --testAutomatically --activeRecord false
+field string --fieldName numeUtilizator --notNull --sizeMin 2  --unique --class ~.domain.Utilizator
+field string --fieldName parola --notNull --sizeMin 2 --class ~.domain.Utilizator
+field set --fieldName rol --type ~.domain.Rol
+field reference --fieldName angajat --type ~.domain.Angajat
+entity jpa --class ~.domain.EchipamentService --testAutomatically --activeRecord false
+field string --fieldName nume --notNull --sizeMin 2 --class ~.domain.EchipamentService
+field string --fieldName serie --unique --notNull --sizeMin 2 --class ~.domain.EchipamentService
+field string --fieldName tip --notNull --sizeMin 2 --class ~.domain.EchipamentService
+entity jpa --class ~.domain.Interventie --testAutomatically --activeRecord false
+field reference --fieldName client --notNull --type ~.domain.Client
+field date --fieldName dataInceput --notNull --type java.util.Date
+field date --fieldName dataSfarsit --type java.util.Date
+field reference --fieldName angajat --notNull --type ~.domain.Angajat
+field reference --fieldName constatare --notNull --type ~.domain.Constatare
+field reference --fieldName echipament --notNull --type ~.domain.EchipamentService
+field string --fieldName descriereDefect --notNull --sizeMax 4000 --class ~.domain.Interventie
+entity jpa --class ~.domain.Material --testAutomatically --activeRecord false
+field string --fieldName nume --notNull --sizeMin 2 --class ~.domain.Material
+field number --fieldName cantitateMp --type java.lang.Double
+entity jpa --class ~.domain.EchipamentProductie --testAutomatically --activeRecord false
+field string --fieldName nume --notNull --sizeMin 2 --class ~.domain.EchipamentProductie
+enum type --class ~.domain.Operatiune
+enum constant --name Imprimare
+enum constant --name TaiereGravareMecanica
+enum constant --name TaiereGravareLaser
+enum constant --name TaiereDecupareCutter
+enum constant --name ImprimareRigidSauTextile
+field enum --fieldName operatiune --type ~.domain.Operatiune --class ~.domain.EchipamentProductie --enumType STRING --notNull
+enum type --class ~.domain.StatusEchipament
+enum constant --name Ocupat
+enum constant --name Liber
+enum constant --name Defect
+field enum --fieldName status --type ~.domain.StatusEchipament --class ~.domain.EchipamentProductie --enumType STRING --notNull 
+field set --fieldName material --type ~.domain.Material
+embeddable --class ~.domain.Dimensiuni
+field number --fieldName latime --notNull --type java.lang.Double
+field number --fieldName lungime --notNull --type java.lang.Double
+entity jpa --class ~.domain.Job --testAutomatically --activeRecord false
+field reference --fieldName client --notNull  --type ~.domain.Client
+field date --fieldName dataPrimirii --notNull --type java.util.Date
+field date --fieldName dataFinalizarii --type java.util.Date
+field embedded --fieldName dimensiuni --type ~.domain.Dimensiuni
+field reference --fieldName material --notNull --type ~.domain.Material
+field reference --fieldName responsabil --notNull --type ~.domain.Angajat
+field reference --fieldName echipament --notNull --type ~.domain.EchipamentProductie
+enum type --class ~.domain.StatusComanda
+enum constant --name Noua
+enum constant --name PartialTerminata
+enum constant --name Finisat
+field enum --fieldName statusJob --type ~.domain.StatusComanda --class ~.domain.Job --enumType STRING --notNull 
+enum type --class ~.domain.TipFinisare
+enum constant --name CuTiv
+enum constant --name CuTivSiCapse
+enum constant --name CuBuzunar
+enum constant --name Roll_Up
+enum constant --name AplicareFolieTransfer
+field enum --fieldName tipFinisare --type ~.domain.TipFinisare --class ~.domain.Job --enumType STRING --notNull 
+repository jpa --interface ~.repository.AngajatRepository --entity ~.domain.Angajat
+repository jpa --interface ~.repository.ClientRepository --entity ~.domain.Client
+repository jpa --interface ~.repository.ConstatareRepository --entity ~.domain.Constatare
+repository jpa --interface ~.repository.EchipamentProductieRepository --entity ~.domain.EchipamentProductie
+repository jpa --interface ~.repository.EchipamentServiceRepository --entity ~.domain.EchipamentService
+repository jpa --interface ~.repository.InterventieRepository --entity ~.domain.Interventie
+repository jpa --interface ~.repository.JobRepository --entity ~.domain.Job
+repository jpa --interface ~.repository.MaterialRepository --entity ~.domain.Material
+repository jpa --interface ~.repository.RolRepository --entity ~.domain.Rol
+repository jpa --interface ~.repository.UtilizatorRepository --entity ~.domain.Utilizator
+service --interface ~.service.AngajatService --entity ~.domain.Angajat
+service --interface ~.service.ClientService --entity ~.domain.Client
+service --interface ~.service.ConstatareService --entity ~.domain.Constatare
+service --interface ~.service.EchipamentProductieService --entity ~.domain.EchipamentProductie
+service --interface ~.service.EchipamentServiceService --entity ~.domain.EchipamentService
+service --interface ~.service.InterventieService --entity ~.domain.Interventie
+service --interface ~.service.JobService --entity ~.domain.Job
+service --interface ~.service.MaterialService --entity ~.domain.Material
+service --interface ~.service.RolService --entity ~.domain.Rol
+service --interface ~.service.UtilizatorService --entity ~.domain.Utilizator
+web mvc setup
+web mvc all --package ~.web
+security setup
+perform eclipsequit
+// Spring Roo 1.2.0.RELEASE [rev 39eb957] log closed at 2012-01-13 21:41:47
